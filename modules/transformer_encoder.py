@@ -62,9 +62,9 @@ class Encoder(nn.Module):
         
         super(Encoder, self).__init__()
         
-        # self.timing_signal = _gen_timing_signal(max_length, hidden_size)
-        # ## for t
-        # self.position_signal = _gen_timing_signal(num_layers, hidden_size)
+        self.timing_signal = gen_timing_signal(max_length, hidden_size)
+        ## for t
+        self.position_signal = gen_timing_signal(num_layers, hidden_size)
 
         self.num_layers = num_layers
         self.act = act
@@ -73,7 +73,7 @@ class Encoder(nn.Module):
                  total_value_depth or hidden_size,
                  filter_size, 
                  num_heads, 
-                 _gen_bias_mask(max_length) if use_mask else None,
+                 gen_bias_mask(max_length) if use_mask else None,
                  layer_dropout, 
                  attention_dropout, 
                  relu_dropout)
