@@ -128,13 +128,13 @@ class Decoder(nn.Module):
         
         if(self.act):
             x, (remainders,n_updates) = self.act_fn(x, inputs, self.dec, self.timing_signal, self.position_signal, self.num_layers, encoder_output)
-            return x, (remainders,n_updates)
+            return x, (remainders,n_updates), None
         else:
             for l in range(self.num_layers):
                 x += self.timing_signal[:, :inputs.shape[1], :].type_as(inputs.data)
                 x += self.position_signal[:, l, :].unsqueeze(1).repeat(1,inputs.shape[1],1).type_as(inputs.data)
                 x, _ = self.dec((x, encoder_output))
-        return x
+        return x, None, None
 
 class ACT_basic(nn.Module):
     def __init__(self,hidden_size):
