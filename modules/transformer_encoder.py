@@ -79,7 +79,6 @@ class Encoder(nn.Module):
                  relu_dropout)
 
         self.proj_flag = False
-        print(embedding_size,hidden_size, "HOHO")
         if(embedding_size == hidden_size):
             self.embedding_proj = nn.Linear(embedding_size, hidden_size, bias=False)
             self.proj_flag = True
@@ -111,7 +110,6 @@ class Encoder(nn.Module):
 
     if(self.proj_flag):
         # Project to hidden size
-        print(x.shape)
         x = self.embedding_proj(x)
 
     if(self.act):
