@@ -110,6 +110,7 @@ class Encoder(nn.Module):
 
     if(self.proj_flag):
         # Project to hidden size
+        print(x.shape)
         x = self.embedding_proj(x)
 
     if(self.act):
