@@ -10,7 +10,7 @@
       "lr_mult": 1.0,
       "freeze": false,
       "max_words_in_sent": 100,
-      "ft_dim": 512,
+      "ft_dim": 3072,
       "vocab": 2692,
       "dropout": 0.1,
       "keyframes": false,
@@ -18,7 +18,7 @@
       "document_freq": "../data/charades/4-gram-phrases-count.json"
     },
    "vis_enc": {
-      "ft_dim": 512,
+      "ft_dim": 3072,
       "hidden_size": 512,
       "rnn_type": "lstm",
       "num_layers": 1,
