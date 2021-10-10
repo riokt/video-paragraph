@@ -18,7 +18,7 @@
       "document_freq": "../data/charades/4-gram-phrases-count.json"
     },
    "vis_enc": {
-      "ft_dim": 512,
+      "ft_dim": 3072,
       "hidden_size": 512,
       "rnn_type": "lstm",
       "num_layers": 1,
