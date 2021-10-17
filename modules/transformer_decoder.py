@@ -124,9 +124,9 @@ class Decoder(nn.Module):
         
         if(self.proj_flag):
             # Project to hidden size
-            print(x.shape)
-            print("HEHE")
             x = self.embedding_proj(x)
+        else:
+            x = self.embed(x)
         
         if(self.act):
             x, (remainders,n_updates) = self.act_fn(x, inputs, self.dec, self.timing_signal, self.position_signal, self.num_layers, encoder_output)

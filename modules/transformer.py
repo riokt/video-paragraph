@@ -33,8 +33,8 @@ class Transformer(nn.Module):
   def __init__(self, config):
     super(Transformer, self).__init__()
     self.config = config
-    self.encoder = Encoder(self.config.ft_dim, self.config.ft_dim, self.config.enc_n_layers, self.config.heads, self.config.dropout, self.config.keyframes)
-    self.decoder = Decoder(self.config.vocab, self.config.vocab, self.config.dec_n_layers, self.config.heads, self.config.dropout)
+    self.encoder = Encoder(self.config.ft_dim, self.config.d_model, self.config.enc_n_layers, self.config.heads, self.config.dropout, self.config.keyframes)
+    self.decoder = Decoder(self.config.vocab, self.config.d_model, self.config.dec_n_layers, self.config.heads, self.config.dropout)
     self.dropout = nn.Dropout(self.config.dropout)
     self.logit = nn.Linear(self.config.d_model, self.config.vocab)
     self.logit.weight = self.decoder.embed.embed.weight

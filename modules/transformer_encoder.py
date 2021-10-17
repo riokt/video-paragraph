@@ -31,9 +31,10 @@ class Encoder(nn.Module):
   # def __init__(self, ft_dim, d_model, N, heads, dropout, keyframes=False):
   def __init__(self, embedding_size, hidden_size, num_layers, num_heads, layer_dropout, act=False, 
           max_length=100, input_dropout=0.0,attention_dropout=0.0, relu_dropout=0.0, use_mask=False, total_key_depth=128, total_value_depth=128, filter_size=128):
-    # super().__init__()
+    super(Encoder, self).__init__()
+    super().__init__()
     # self.N = N
-    # self.embed = nn.Linear(ft_dim, d_model)
+    self.embed = nn.Linear(embedding_size, hidden_size)
     # self.pe = PositionalEncoder(d_model, dropout=dropout)
     # self.layers = get_clones(EncoderLayer(d_model, heads, dropout, keyframes), N)
     # self.norm = Norm(d_model)
@@ -59,36 +60,35 @@ class Encoder(nn.Module):
     #         relu_dropout: Dropout probability after relu in FFN (Should be non-zero only during training)
     #         use_mask: Set to True to turn on future value masking
     #     """
+    
         
-        super(Encoder, self).__init__()
-        
-        self.timing_signal = gen_timing_signal(max_length, hidden_size)
-        ## for t
-        self.position_signal = gen_timing_signal(num_layers, hidden_size)
+    self.timing_signal = gen_timing_signal(max_length, hidden_size)
+    ## for t
+    self.position_signal = gen_timing_signal(num_layers, hidden_size)
 
-        self.num_layers = num_layers
-        self.act = act
-        params =(hidden_size, 
-                 total_key_depth or hidden_size,
-                 total_value_depth or hidden_size,
-                 filter_size, 
-                 num_heads, 
-                 gen_bias_mask(max_length) if use_mask else None,
-                 layer_dropout, 
-                 attention_dropout, 
-                 relu_dropout)
+    self.num_layers = num_layers
+    self.act = act
+    params =(hidden_size, 
+                total_key_depth or hidden_size,
+                total_value_depth or hidden_size,
+                filter_size, 
+                num_heads, 
+                gen_bias_mask(max_length) if use_mask else None,
+                layer_dropout, 
+                attention_dropout, 
+                relu_dropout)
 
-        self.proj_flag = False
-        if(embedding_size == hidden_size):
-            self.embedding_proj = nn.Linear(embedding_size, hidden_size, bias=False)
-            self.proj_flag = True
+    self.proj_flag = False
+    if(embedding_size == hidden_size):
+        self.embedding_proj = nn.Linear(embedding_size, hidden_size, bias=False)
+        self.proj_flag = True
 
-        self.enc = EncoderLayer(*params)
-        
-        self.layer_norm = LayerNorm(hidden_size)
-        self.input_dropout = nn.Dropout(input_dropout)
-        if(self.act):
-            self.act_fn = ACT_basic(hidden_size)
+    self.enc = EncoderLayer(*params)
+    
+    self.layer_norm = LayerNorm(hidden_size)
+    self.input_dropout = nn.Dropout(input_dropout)
+    if(self.act):
+        self.act_fn = ACT_basic(hidden_size)
 
   # def forward(self, src, mask):
   def forward(self, inputs, mask):
@@ -111,6 +111,8 @@ class Encoder(nn.Module):
     if(self.proj_flag):
         # Project to hidden size
         x = self.embedding_proj(x)
+    else:
+        x = self.embed(x)
 
     if(self.act):
         x, (remainders,n_updates) = self.act_fn(x, inputs, self.enc, self.timing_signal, self.position_signal, self.num_layers)
