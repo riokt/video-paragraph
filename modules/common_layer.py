@@ -105,7 +105,7 @@ class DecoderLayer(nn.Module):
         self.layer_norm_ffn = LayerNorm(hidden_size)
 
         
-    def forward(self, inputs):
+    def forward(self, inputs, src_mask, trg_mask):
         """
         NOTE: Inputs is a tuple consisting of decoder inputs and encoder output
         """
@@ -115,7 +115,7 @@ class DecoderLayer(nn.Module):
         x_norm = self.layer_norm_mha_dec(x)
         
         # Masked Multi-head attention
-        y = self.multi_head_attention_dec(x_norm, x_norm, x_norm)
+        y = self.multi_head_attention_dec(x_norm, x_norm, x_norm, trg_mask)
         
         # Dropout and residual after self-attention
         x = self.dropout(x + y)
@@ -124,7 +124,7 @@ class DecoderLayer(nn.Module):
         x_norm = self.layer_norm_mha_enc(x)
 
         # Multi-head encoder-decoder attention
-        y = self.multi_head_attention_enc_dec(x_norm, encoder_outputs, encoder_outputs)
+        y = self.multi_head_attention_enc_dec(x_norm, encoder_outputs, encoder_outputs, src_mask)
         
         # Dropout and residual after encoder-decoder attention
         x = self.dropout(x + y)
