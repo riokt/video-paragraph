@@ -133,7 +133,7 @@ class Decoder(nn.Module):
             for l in range(self.num_layers):
                 x += self.timing_signal[:, :inputs.shape[1], :].type_as(inputs.data)
                 x += self.position_signal[:, l, :].unsqueeze(1).repeat(1,inputs.shape[1],1).type_as(inputs.data)
-                x, attn_ = self.dec((x, encoder_output), src_mask, trg_mask)
+                x, attn = self.dec((x, encoder_output), src_mask, trg_mask)
         return x, attn, None
 
 class ACT_basic(nn.Module):
