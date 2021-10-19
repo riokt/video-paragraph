@@ -55,6 +55,10 @@ class Transformer(nn.Module):
     memory_bank = e_outputs * add_state
     d_output, attn_weights = [], []
     for i in range(1, trg.size(1)+1):
+      print("target")
+      print(trg_mask[:,i-1,:i].unsqueeze(1).shape)
+      
+    for i in range(1, trg.size(1)+1):
       word, attn, _ = self.decoder(trg[:,i-1].unsqueeze(1), memory_bank, src_mask, trg_mask[:,i-1,:i].unsqueeze(1), step=i)
       d_output.append(word[:,-1])
       attn_weights.append(attn[:,:,-1].mean(dim=1))
