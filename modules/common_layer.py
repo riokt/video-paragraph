@@ -115,7 +115,7 @@ class DecoderLayer(nn.Module):
         x_norm = self.layer_norm_mha_dec(x)
         
         # Masked Multi-head attention
-        y = self.multi_head_attention_dec(x_norm, x_norm, x_norm, trg_mask)
+        y, _ = self.multi_head_attention_dec(x_norm, x_norm, x_norm, trg_mask)
         
         # Dropout and residual after self-attention
         x = self.dropout(x + y)
@@ -124,7 +124,7 @@ class DecoderLayer(nn.Module):
         x_norm = self.layer_norm_mha_enc(x)
 
         # Multi-head encoder-decoder attention
-        y = self.multi_head_attention_enc_dec(x_norm, encoder_outputs, encoder_outputs, src_mask)
+        y, attn = self.multi_head_attention_enc_dec(x_norm, encoder_outputs, encoder_outputs, src_mask)
         
         # Dropout and residual after encoder-decoder attention
         x = self.dropout(x + y)
@@ -139,7 +139,7 @@ class DecoderLayer(nn.Module):
         y = self.dropout(x + y)
         
         # Return encoder outputs as well to work with nn.Sequential
-        return y, encoder_outputs
+        return y, attn, encoder_outputs
 
 
 
@@ -251,7 +251,7 @@ class MultiHeadAttention(nn.Module):
         # Linear to get output
         outputs = self.output_linear(contexts)
         
-        return outputs
+        return outputs, weights
 
 class Conv(nn.Module):
     """
