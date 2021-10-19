@@ -109,6 +109,7 @@ class DecoderLayer(nn.Module):
         """
         NOTE: Inputs is a tuple consisting of decoder inputs and encoder output
         """
+        print("Decoder")
         x, encoder_outputs = inputs
         
         # Layer Normalization before decoder self attention
