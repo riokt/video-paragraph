@@ -182,6 +182,10 @@ class MultiHeadAttention(nn.Module):
         
         self.dropout = nn.Dropout(dropout)
     
+    def shape(self, x):
+        bs = x.size(0)
+        return x.view(bs, -1, self.h, self.d_k).transpose(1,2)
+    
     def _split_heads(self, x):
         """
         Split x such to add an extra num_heads dimension
@@ -228,7 +232,7 @@ class MultiHeadAttention(nn.Module):
         
 
         if src_mask is not None:
-            src_mask = src_mask.unsqueeze(1)
+            # src_mask = src_mask.unsqueeze(1)
             logits = logits.masked_fill(src_mask == 0, -1e9)
             
         # Add bias to mask future values
