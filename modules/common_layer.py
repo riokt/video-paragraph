@@ -50,7 +50,7 @@ class EncoderLayer(nn.Module):
         x_norm = self.layer_norm_mha(x)
         
         # Multi-head attention
-        y = self.multi_head_attention(x_norm, x_norm, x_norm)
+        y, _ = self.multi_head_attention(x_norm, x_norm, x_norm)
         
         # Dropout and residual
         x = self.dropout(x + y)
@@ -118,9 +118,6 @@ class DecoderLayer(nn.Module):
         y, _ = self.multi_head_attention_dec(x_norm, x_norm, x_norm, trg_mask)
         
         # Dropout and residual after self-attention
-        print(x)
-        print("=============")
-        print(y)
         x = self.dropout(x + y)
 
         # Layer Normalization before encoder-decoder attention
