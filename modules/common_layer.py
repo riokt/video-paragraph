@@ -116,7 +116,7 @@ class DecoderLayer(nn.Module):
         x_norm = self.layer_norm_mha_dec(x)
         
         # Masked Multi-head attention
-        y, _ = self.multi_head_attention_dec(x_norm, x_norm, x_norm, trg_mask, is_dec=True)
+        y, _ = self.multi_head_attention_dec(x_norm, x_norm, x_norm, trg_mask)
         
         # Dropout and residual after self-attention
         x = self.dropout(x + y)
@@ -233,8 +233,8 @@ class MultiHeadAttention(nn.Module):
         
         print(logits.shape)
         if src_mask is not None:
-            # if is_dec:
-            #     src_mask = src_mask.unsqueeze(1)
+            if is_dec:
+                src_mask = src_mask.unsqueeze(1)
             logits = logits.masked_fill(src_mask == 0, -1e9)
             
         # Add bias to mask future values
