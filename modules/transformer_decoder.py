@@ -40,7 +40,7 @@ class Embedder(nn.Module):
 class Decoder(nn.Module):
   # def __init__(self, vocab_size, d_model, N, heads, dropout):
   def __init__(self, embedding_size, hidden_size, num_layers, num_heads, layer_dropout, act=False, 
-          max_length=100, input_dropout=0.0,attention_dropout=0.0, relu_dropout=0.0, use_mask=False, total_key_depth=128, total_value_depth=128, filter_size=128):
+          max_length=200, input_dropout=0.0,attention_dropout=0.0, relu_dropout=0.0, use_mask=False, total_key_depth=128, total_value_depth=128, filter_size=128):
     # super().__init__()
     # self.N = N
     # self.embed = Embedder(vocab_size, d_model)
@@ -132,7 +132,6 @@ class Decoder(nn.Module):
             x, (remainders,n_updates) = self.act_fn(x, inputs, self.dec, self.timing_signal, self.position_signal, self.num_layers, encoder_output)
             return x, (remainders,n_updates), None
         else:
-            print(x.shape)
             for l in range(self.num_layers):
                 x += self.timing_signal[:, :inputs.shape[1], :].type_as(inputs.data)
                 x += self.position_signal[:, l, step].unsqueeze(1).repeat(1,inputs.shape[1],1).type_as(inputs.data)
