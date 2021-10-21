@@ -231,7 +231,7 @@ class MultiHeadAttention(nn.Module):
         # Combine queries and keys
         logits = torch.matmul(queries, keys.permute(0, 1, 3, 2))
         
-        print(logits.shape)
+        # print(logits.shape)
         if src_mask is not None:
             if is_dec:
                 src_mask = src_mask.unsqueeze(1)
