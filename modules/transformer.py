@@ -93,7 +93,7 @@ class Transformer(nn.Module):
     attn_weights, d_output = [], []
     for i in range(1, 60):
       trg_mask = self.nopeak_mask(i)
-      word, attn = self.decoder(outputs[:,-1].unsqueeze(1), memory_bank, src_mask, trg_mask[:,-1].unsqueeze(1), step=i)
+      word, attn, _ = self.decoder(outputs[:,-1].unsqueeze(1), memory_bank, src_mask, trg_mask[:,-1].unsqueeze(1), step=i-1)
       attn_weights.append(attn[:,:,-1].mean(dim=1))
       d_output.append(word[:,-1])
       out = self.logit(word)
