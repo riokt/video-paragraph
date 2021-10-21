@@ -30,7 +30,7 @@ from modules.common_layer import *
 class Encoder(nn.Module):
   # def __init__(self, ft_dim, d_model, N, heads, dropout, keyframes=False):
   def __init__(self, embedding_size, hidden_size, num_layers, num_heads, layer_dropout, act=False, 
-          max_length=100, input_dropout=0.0,attention_dropout=0.0, relu_dropout=0.0, use_mask=False, total_key_depth=128, total_value_depth=128, filter_size=128):
+          max_length=200, input_dropout=0.0,attention_dropout=0.0, relu_dropout=0.0, use_mask=False, total_key_depth=128, total_value_depth=128, filter_size=128):
     super(Encoder, self).__init__()
     super().__init__()
     # self.N = N
