@@ -109,7 +109,7 @@ class DecoderLayer(nn.Module):
         """
         NOTE: Inputs is a tuple consisting of decoder inputs and encoder output
         """
-        print("Decoder")
+        # print("Decoder")
         x, encoder_outputs = inputs
         
         # Layer Normalization before decoder self attention
@@ -248,9 +248,9 @@ class MultiHeadAttention(nn.Module):
         weights = self.dropout(weights)
         
         # Combine with values to get context
-        print(weights.shape)
-        print(values.shape)
-        print("==================")
+        # print(weights.shape)
+        # print(values.shape)
+        # print("==================")
         contexts = torch.matmul(weights, values)
         
         # Merge heads

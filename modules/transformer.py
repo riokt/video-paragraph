@@ -54,11 +54,8 @@ class Transformer(nn.Module):
     add_state = torch.tensor(decay2[:e_outputs.size(1)]+[0]*max(0,e_outputs.size(1)-50)).cuda().unsqueeze(0).unsqueeze(-1)
     memory_bank = e_outputs * add_state
     d_output, attn_weights = [], []
+    
     for i in range(1, trg.size(1)+1):
-      print("target")
-      print(trg[:,i-1].unsqueeze(1).shape, trg_mask[:,i-1,:i].unsqueeze(1).shape)
-      
-    for i in range(1, trg.size(1)):
       word, attn, _ = self.decoder(trg[:,i-1].unsqueeze(1), memory_bank, src_mask, trg_mask[:,i-1,i].unsqueeze(1), step=i-1)
       d_output.append(word[:,-1])
       attn_weights.append(attn[:,:,-1].mean(dim=1))
