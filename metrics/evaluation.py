@@ -67,34 +67,38 @@ def getNgrams(words_pred, unigrams, bigrams, trigrams, fourgrams):
 
 def diversity(data_pred):
   div1, div2, re4 = [], [], []
-  for i in range(len(data_pred)):
-    unigrams, bigrams, trigrams, fourgrams = {}, {}, {}, {}
-    if data_pred[i][-1] == '.':
-      para = data_pred[i].split('.')[:-1]
-    else:
-      para = data_pred[i].split('.')
-    for j, pred_sentence in enumerate(para):
-      if pred_sentence[-1] == '.':
-        pred_sentence = pred_sentence[:-1]
-      while len(pred_sentence) > 0 and pred_sentence[-1] == ' ':
-        pred_sentence = pred_sentence[:-1]
-      while len(pred_sentence) > 0 and pred_sentence[0] == ' ':
-        pred_sentence = pred_sentence[1:]
-      pred_sentence = pred_sentence.replace(',', ' ')
-      while '  ' in pred_sentence:
-        pred_sentence = pred_sentence.replace('  ', ' ')
+  try:
+    for i in range(len(data_pred)):
+      unigrams, bigrams, trigrams, fourgrams = {}, {}, {}, {}
+      if data_pred[i][-1] == '.':
+        para = data_pred[i].split('.')[:-1]
+      else:
+        para = data_pred[i].split('.')
+      for j, pred_sentence in enumerate(para):
+        if pred_sentence[-1] == '.':
+          pred_sentence = pred_sentence[:-1]
+        while len(pred_sentence) > 0 and pred_sentence[-1] == ' ':
+          pred_sentence = pred_sentence[:-1]
+        while len(pred_sentence) > 0 and pred_sentence[0] == ' ':
+          pred_sentence = pred_sentence[1:]
+        pred_sentence = pred_sentence.replace(',', ' ')
+        while '  ' in pred_sentence:
+          pred_sentence = pred_sentence.replace('  ', ' ')
 
-      words_pred = pred_sentence.split(' ')
-      unigrams, bigrams, trigrams, fourgrams = getNgrams(words_pred, unigrams, bigrams, trigrams, fourgrams)
+        words_pred = pred_sentence.split(' ')
+        unigrams, bigrams, trigrams, fourgrams = getNgrams(words_pred, unigrams, bigrams, trigrams, fourgrams)
 
-    sum_unigrams = sum([unigrams[un] for un in unigrams])
-    vid_div1 = float(len(unigrams)) / (float(sum_unigrams) + 1e-28)
-    vid_div2 = float(len(bigrams)) / (float(sum_unigrams) + 1e-28)
-    vid_re4 = float(sum([max(fourgrams[f]-1,0) for f in fourgrams])) / (float(sum([fourgrams[f] for f in fourgrams])) + 1e-28)
+      sum_unigrams = sum([unigrams[un] for un in unigrams])
+      vid_div1 = float(len(unigrams)) / (float(sum_unigrams) + 1e-28)
+      vid_div2 = float(len(bigrams)) / (float(sum_unigrams) + 1e-28)
+      vid_re4 = float(sum([max(fourgrams[f]-1,0) for f in fourgrams])) / (float(sum([fourgrams[f] for f in fourgrams])) + 1e-28)
 
-    div1.append(vid_div1)
-    div2.append(vid_div2)
-    re4.append(vid_re4)
+      div1.append(vid_div1)
+      div2.append(vid_div2)
+      re4.append(vid_re4)
+  except Exception as e:
+    print(e)
+    pass
   return np.mean(div1), np.mean(div2), np.mean(re4)
 
 
@@ -112,3 +116,16 @@ def compute(preds, names, refs):
             'cider':cider, 'meteor':meteor,
             'div1':div1, 'div2':div2, 're4':re4}
   return scores
+
+  if guess in word:
+    print("\nYes!", guess, "is in the word!")
+
+    # Create a new variable (so_far) to contain the guess
+    new = ""
+    i = 0
+    for i in range(len(word)):
+        if guess == word[i]:
+            new += guess
+        else:
+            new += so_far[i]
+        so_far = new
