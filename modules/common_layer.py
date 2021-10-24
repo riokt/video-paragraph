@@ -116,7 +116,7 @@ class DecoderLayer(nn.Module):
         x_norm = self.layer_norm_mha_dec(x)
         
         # Masked Multi-head attention
-        y, _ = self.multi_head_attention_dec(x_norm, x_norm, x_norm, trg_mask)
+        y, _ = self.multi_head_attention_dec(x_norm, x_norm, x_norm, trg_mask, is_dec=True)
         
         # Dropout and residual after self-attention
         x = self.dropout(x + y)
