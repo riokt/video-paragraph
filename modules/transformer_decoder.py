@@ -86,7 +86,6 @@ class Decoder(nn.Module):
               relu_dropout)
 
     self.proj_flag = False
-    print(embedding_size,hidden_size, "HOHO")
     if(embedding_size == hidden_size):
         self.embedding_proj = nn.Linear(embedding_size, hidden_size, bias=False)
         self.proj_flag = True

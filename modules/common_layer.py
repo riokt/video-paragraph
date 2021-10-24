@@ -43,14 +43,14 @@ class EncoderLayer(nn.Module):
         self.layer_norm_mha = LayerNorm(hidden_size)
         self.layer_norm_ffn = LayerNorm(hidden_size)
         
-    def forward(self, inputs):
+    def forward(self, inputs, mask):
         x = inputs
         
         # Layer Normalization
         x_norm = self.layer_norm_mha(x)
         
         # Multi-head attention
-        y, _ = self.multi_head_attention(x_norm, x_norm, x_norm)
+        y, _ = self.multi_head_attention(x_norm, x_norm, x_norm, mask)
         
         # Dropout and residual
         x = self.dropout(x + y)

@@ -121,7 +121,7 @@ class Encoder(nn.Module):
         for l in range(self.num_layers):
             x += self.timing_signal[:, :inputs.shape[1], :].type_as(inputs.data)
             x += self.position_signal[:, l, :].unsqueeze(1).repeat(1,inputs.shape[1],1).type_as(inputs.data)
-            x = self.enc(x)
+            x = self.enc(x, mask)
         return x, None, None
 
   def get_keyframes(self, src, mask):
