@@ -50,7 +50,7 @@ class EncoderLayer(nn.Module):
         x_norm = self.layer_norm_mha(x)
         
         # Multi-head attention
-        y, _ = self.multi_head_attention(x_norm, x_norm, x_norm, mask)
+        y, _ = self.multi_head_attention(x_norm, x_norm, x_norm, mask, is_dec=True)
         
         # Dropout and residual
         x = self.dropout(x + y)
@@ -239,6 +239,7 @@ class MultiHeadAttention(nn.Module):
             # print(src_mask.shape)
             # print(src_mask.shape==0)
             for i in range(logits.shape[1]):
+                print(i)
                 logits[:,i,:,:] = logits[:,i,:,:].masked_fill(src_mask == 0, -1e9)
             
         # Add bias to mask future values
