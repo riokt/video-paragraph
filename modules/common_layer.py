@@ -238,7 +238,7 @@ class MultiHeadAttention(nn.Module):
             # print(logits.shape)
             # print(src_mask.shape)
             # print(src_mask.shape==0)
-            for i in logits.shape[1]:
+            for i in range(logits.shape[1]):
                 logits[:,i,:,:] = logits[:,i,:,:].masked_fill(src_mask == 0, -1e9)
             
         # Add bias to mask future values
