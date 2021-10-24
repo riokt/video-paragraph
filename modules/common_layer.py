@@ -50,7 +50,7 @@ class EncoderLayer(nn.Module):
         x_norm = self.layer_norm_mha(x)
         
         # Multi-head attention
-        y, _ = self.multi_head_attention(x_norm, x_norm, x_norm, mask, is_dec=True)
+        y, _ = self.multi_head_attention(x_norm, x_norm, x_norm, mask)
         
         # Dropout and residual
         x = self.dropout(x + y)
