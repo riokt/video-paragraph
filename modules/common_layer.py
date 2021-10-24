@@ -235,10 +235,11 @@ class MultiHeadAttention(nn.Module):
         if src_mask is not None:
             if is_dec:
                 src_mask = src_mask.unsqueeze(1)
-            print(logits.shape)
-            print(src_mask.shape)
-            print(src_mask.shape==0)
-            logits = logits.masked_fill(src_mask == 0, -1e9)
+            # print(logits.shape)
+            # print(src_mask.shape)
+            # print(src_mask.shape==0)
+            for i in logits.shape[1]:
+                logits[:,i,:,:] = logits[:,i,:,:].masked_fill(src_mask == 0, -1e9)
             
         # Add bias to mask future values
         if self.bias_mask is not None:
