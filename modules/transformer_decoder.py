@@ -191,7 +191,7 @@ class ACT_basic(nn.Module):
             # the remainders when it halted this step
             update_weights = p * still_running + new_halted * remainders
 
-            if(encoder_output):
+            if encoder_output is not None:
                 state, _ = fn((state,encoder_output), mask[0], mask[1])
             else:
                 # apply transformation on the state
