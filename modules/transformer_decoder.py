@@ -128,8 +128,8 @@ class Decoder(nn.Module):
             x = self.embed(x)
         
         if(self.act):
-            x, (remainders,n_updates) = self.act_fn(x, x, step, (src_mask, trg_mask), self.dec, self.timing_signal, self.position_signal, self.num_layers, encoder_output)
-            return x, (remainders,n_updates), None
+            x, (remainders,n_updates), attn = self.act_fn(x, x, step, (src_mask, trg_mask), self.dec, self.timing_signal, self.position_signal, self.num_layers, encoder_output)
+            return x, attn, (remainders,n_updates)
         else:
             for l in range(self.num_layers):
                 x += self.timing_signal[:, :inputs.shape[1], :].type_as(inputs.data)
@@ -192,7 +192,7 @@ class ACT_basic(nn.Module):
             update_weights = p * still_running + new_halted * remainders
 
             if encoder_output is not None:
-                state, _ = fn((state,encoder_output), mask[0], mask[1])
+                state, attn, _ = fn((state,encoder_output), mask[0], mask[1])
             else:
                 # apply transformation on the state
                 state = fn(state)
@@ -203,4 +203,4 @@ class ACT_basic(nn.Module):
             ## to save a line I assigned to previous_state so in the next 
             ## iteration is correct. Notice that indeed we return previous_state
             step+=1
-        return previous_state, (remainders,n_updates)
+        return previous_state, (remainders,n_updates), attn
