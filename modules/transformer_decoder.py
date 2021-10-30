@@ -128,7 +128,7 @@ class Decoder(nn.Module):
             x = self.embed(x)
         
         if(self.act):
-            x, (remainders,n_updates) = self.act_fn(x, inputs, step, (src_mask, trg_mask), self.dec, self.timing_signal, self.position_signal, self.num_layers, encoder_output)
+            x, (remainders,n_updates) = self.act_fn(x, x, step, (src_mask, trg_mask), self.dec, self.timing_signal, self.position_signal, self.num_layers, encoder_output)
             return x, (remainders,n_updates), None
         else:
             for l in range(self.num_layers):

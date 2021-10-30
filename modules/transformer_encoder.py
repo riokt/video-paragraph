@@ -115,7 +115,7 @@ class Encoder(nn.Module):
         x = self.embed(x)
 
     if(self.act):
-        x, (remainders,n_updates) = self.act_fn(x, inputs, self.enc, self.timing_signal, self.position_signal, self.num_layers)
+        x, (remainders,n_updates) = self.act_fn(x, x, self.enc, self.timing_signal, self.position_signal, self.num_layers)
         return x, (remainders,n_updates), None
     else:
         for l in range(self.num_layers):
