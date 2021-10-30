@@ -39,7 +39,7 @@ class Embedder(nn.Module):
     
 class Decoder(nn.Module):
   # def __init__(self, vocab_size, d_model, N, heads, dropout):
-  def __init__(self, embedding_size, hidden_size, num_layers, num_heads, layer_dropout, act=False, 
+  def __init__(self, embedding_size, hidden_size, num_layers, num_heads, layer_dropout, keyframes=False, act=False, 
           max_length=200, input_dropout=0.0,attention_dropout=0.0, relu_dropout=0.0, use_mask=False, total_key_depth=128, total_value_depth=128, filter_size=128):
     # super().__init__()
     # self.N = N
@@ -128,7 +128,7 @@ class Decoder(nn.Module):
             x = self.embed(x)
         
         if(self.act):
-            x, (remainders,n_updates) = self.act_fn(x, inputs, self.dec, self.timing_signal, self.position_signal, self.num_layers, encoder_output)
+            x, (remainders,n_updates) = self.act_fn(x, inputs, step, (src_mask, trg_mask), self.dec, self.timing_signal, self.position_signal, self.num_layers, encoder_output)
             return x, (remainders,n_updates), None
         else:
             for l in range(self.num_layers):
@@ -145,7 +145,7 @@ class ACT_basic(nn.Module):
         self.p.bias.data.fill_(1) 
         self.threshold = 1 - 0.1
 
-    def forward(self, state, inputs, fn, time_enc, pos_enc, max_hop, encoder_output=None):
+    def forward(self, state, inputs, step_i, mask, fn, time_enc, pos_enc, max_hop, encoder_output=None):
         # init_hdd
         ## [B, S]
         halting_probability = torch.zeros(inputs.shape[0],inputs.shape[1]).cuda()
@@ -160,7 +160,7 @@ class ACT_basic(nn.Module):
         while( ((halting_probability<self.threshold) & (n_updates < max_hop)).byte().any()):
             # Add timing signal
             state = state + time_enc[:, :inputs.shape[1], :].type_as(inputs.data)
-            state = state + pos_enc[:, step, :].unsqueeze(1).repeat(1,inputs.shape[1],1).type_as(inputs.data)
+            state = state + pos_enc[:, step, step_i].unsqueeze(1).repeat(1,inputs.shape[1],1).type_as(inputs.data)
 
             p = self.sigma(self.p(state)).squeeze(-1)
             # Mask for inputs which have not halted yet
@@ -192,7 +192,7 @@ class ACT_basic(nn.Module):
             update_weights = p * still_running + new_halted * remainders
 
             if(encoder_output):
-                state, _ = fn((state,encoder_output))
+                state, _ = fn((state,encoder_output), mask[0], mask[1])
             else:
                 # apply transformation on the state
                 state = fn(state)
