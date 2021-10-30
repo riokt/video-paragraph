@@ -43,7 +43,7 @@ class EncoderLayer(nn.Module):
         self.layer_norm_mha = LayerNorm(hidden_size)
         self.layer_norm_ffn = LayerNorm(hidden_size)
         
-    def forward(self, inputs, mask):
+    def forward(self, inputs, mask=None):
         x = inputs
         
         # Layer Normalization
