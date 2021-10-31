@@ -134,10 +134,10 @@ class TransModel(framework.modelbase.ModelBase):
       self.load_checkpoint(tst_model_file)
     self.eval_start()
     metrics, pred_data = self.evaluate(tst_reader)
-    with open('gt_'+tst_pred_file, 'w') as f:
-      json.dump(tst_reader.dataset.ref_captions, f)
     with open(tst_pred_file, 'w') as f:
-      json.dump(pred_data, f)
+      json.dump(tst_reader.dataset.ref_captions, f)
+    # with open(tst_pred_file, 'w') as f:
+    #   json.dump(pred_data, f)
     return metrics
 
   def nopeak_mask(self, size):
