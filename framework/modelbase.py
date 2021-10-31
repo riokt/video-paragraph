@@ -59,7 +59,7 @@ class ModelBase(object):
     # raise NotImplementedError('implement validate function: return metrics')
 
   def test(self, tst_reader, tst_pred_file, tst_model_file=None):
-    if tst_model_file is not Nonesss:
+    if tst_model_file is not None:
       self.load_checkpoint(tst_model_file)
     self.eval_start()
     # raise NotImplementedError('implement test function')
